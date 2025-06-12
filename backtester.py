@@ -1,16 +1,19 @@
 import pandas as pd
 
 def backtest(result, initial_cash = 10000):
+    #Variable initialization
     cash = float(initial_cash)
     shares = 0
     equity_curve = [initial_cash]
     position = None
 
+    #Day for day price and SMA
     for i in range(1, len(result)):
         price = result['Close'].values[i]
         sma50 = result['SMA50'].values[i]
         sma200 = result['SMA200'].values[i]
 
+        #Required as SMA50 and SMA200 returns NaN for the first 50 and 200 days respectively
         if pd.notna(sma50) and pd.notna(sma200):
             if sma50 > sma200:
                 current_signal = 'Buy'
@@ -18,6 +21,7 @@ def backtest(result, initial_cash = 10000):
                 current_signal = 'Sell'
 
 
+            #Only act when signal changes
             if not current_signal == position:
                 if current_signal == 'Buy' and shares == 0:
                     shares = int(cash // price)

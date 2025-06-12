@@ -1,11 +1,13 @@
 import matplotlib.pyplot as plt
 
 def stockplotter(result):
+    #Fetch necessary data
     sma50 = result['SMA50']
     sma200 = result['SMA200']
     close = result['Close']
     date = result.index
 
+    #Increase resolution for readability
     plt.figure(figsize=(12, 6), dpi=300)
 
     plt.xlabel("Date")
@@ -22,6 +24,7 @@ def stockplotter(result):
     plt.show()
 
 def equityplotter(result):
+    #Fetch necessary data
     equity = result['Equity']
     date = result.index
 
