@@ -1,13 +1,21 @@
 import pandas as pd
 
 def backtest(result, initial_cash = 10000):
-    #Variable initialization
+    #Variable initialization golden cross
     cash = float(initial_cash)
     shares = 0
     equity_curve = [initial_cash]
     position = None
 
-    #Day for day price and SMA
+    #Variable initialization hold strategi
+    cash_hodl = float(initial_cash)
+    equity_hodl = [initial_cash]
+
+    #Comparison of just holding stocks
+    shares_hodl = int(initial_cash // result['Close'].values[0])
+    cash_hodl -= shares_hodl * result['Close'].values[0]
+
+    #Daily price and SMA
     for i in range(1, len(result)):
         price = result['Close'].values[i]
         sma50 = result['SMA50'].values[i]
@@ -31,9 +39,13 @@ def backtest(result, initial_cash = 10000):
                     cash += shares * price
                     shares = 0
 
+                position = current_signal
+
 
         equity_curve.append(cash + shares*price)
+        equity_hodl.append(cash_hodl + shares_hodl*price)
 
     result['Equity'] = equity_curve
+    result['Equity_HODL'] = equity_hodl
 
     return result

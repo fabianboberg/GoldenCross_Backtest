@@ -23,9 +23,10 @@ def stockplotter(result):
 
     plt.show()
 
-def equityplotter(result):
+def equityplotter(result, cagr, cagr_hodl):
     #Fetch necessary data
     equity = result['Equity']
+    equity_hodl = result['Equity_HODL']
     date = result.index
 
     plt.figure(figsize=(12, 6), dpi=100)
@@ -35,7 +36,8 @@ def equityplotter(result):
 
     plt.title("Equity growth with golden cross method")
 
-    plt.plot(date, equity, label="Equity")
+    plt.plot(date, equity, label=f"Equity - Golden cross method (CAGR: {cagr:.1f}%)")
+    plt.plot(date, equity_hodl, label=f"Equity - Holding stocks (CAGR: {cagr_hodl:.1f}%)")
 
     plt.legend()
 
