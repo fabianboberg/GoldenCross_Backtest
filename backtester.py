@@ -41,7 +41,7 @@ def backtest(result, initial_cash = 10000):
 
                 position = current_signal
 
-
+        #Calculate current equity
         equity_curve.append(cash + shares*price)
         equity_hodl.append(cash_hodl + shares_hodl*price)
 

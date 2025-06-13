@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime, timedelta
 
 #Function to cut out the first 200 days when SMA200 is unable to respond
 def datatrimmer(result):
@@ -19,7 +20,7 @@ def datatrimmer(result):
 
     return result_trimmed
 
-#Calculate CAGR
+#Calculate the average CAGR of the period
 def cagrcalc(result):
     start_date = result.index[0]
     end_date = result.index[-1]
@@ -39,7 +40,7 @@ def cagrcalc(result):
     cagr_hodl = float((end_valuehodl / start_value) ** (1 / years) - 1) * 100
     return cagr, cagr_hodl
 
-
+#Calculate average annual volatiltiy over the entire period
 def calculate_volatility(result):
     equity = result['Equity'].apply(lambda x: x[0] if isinstance(x, (np.ndarray, list)) else x)
     equity_hodl = result['Equity_HODL'].apply(lambda x: x[0] if isinstance(x, (np.ndarray, list)) else x)
@@ -56,6 +57,7 @@ def calculate_volatility(result):
 
     return annual_volatility, annual_volatility_hodl
 
+#Calculate the sharpe ratio
 def sharpe_ratio(cagr, cagr_hodl, annual_volatility, annual_volatility_hodl):
 
     risk_free_rate = 0.03
@@ -68,7 +70,7 @@ def sharpe_ratio(cagr, cagr_hodl, annual_volatility, annual_volatility_hodl):
 
     return sharpe, sharpe_hodl
 
-
+#Collect the input from the user
 def user_input():
     ticker = input('Enter stock ticker symbol (AAPL, GOOGL, MSFT): ').upper().strip()
 
@@ -81,3 +83,13 @@ def user_input():
         end_date = None
 
     return ticker, user_start_date, end_date
+
+#Function to ensure sufficient historical data is retrieved before the user-specified start date,
+#allowing the SMA calculation to return valid values for the entire selected period.
+def adjust_start_date(user_start_date):
+    #Number of days calculated before user input date
+    calculation_margin = 365
+
+    start_dt = datetime.strptime(user_start_date, '%Y-%m-%d')
+    adjusted_start_date = (start_dt - timedelta(days=calculation_margin)).strftime('%Y-%m-%d')
+    return adjusted_start_date
