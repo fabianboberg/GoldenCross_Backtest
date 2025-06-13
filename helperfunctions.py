@@ -67,3 +67,17 @@ def sharpe_ratio(cagr, cagr_hodl, annual_volatility, annual_volatility_hodl):
     sharpe_hodl = (cagr_hodl - risk_free_rate) / annual_volatility_hodl
 
     return sharpe, sharpe_hodl
+
+
+def user_input():
+    ticker = input('Enter stock ticker symbol (AAPL, GOOGL, MSFT): ').upper().strip()
+
+    user_start_date = input('Enter start date (YYYY-MM-DD) or press enter for 2010-01-01: ').strip()
+    if not user_start_date:
+        user_start_date = '2010-01-01'
+
+    end_date = input('Enter end date (YYYY-MM-DD) or press enter for today: ').strip()
+    if not end_date:
+        end_date = None
+
+    return ticker, user_start_date, end_date

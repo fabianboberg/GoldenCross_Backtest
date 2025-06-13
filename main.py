@@ -1,15 +1,26 @@
-from FetchStockData import get_aapl_stockdata
+from FetchStockData import get_stockdata
 from SMA_Cross import sma_cross
 from backtester import backtest
 from visual import *
 from helperfunctions import *
 from backtest_types import BacktestResult
+from datetime import datetime, timedelta
 
-stock_data = get_aapl_stockdata()
+ticker, user_start_date, end_date = user_input()
+
+margin_days = 365
+
+start_dt = datetime.strptime(user_start_date, '%Y-%m-%d')
+adjusted_start_date = (start_dt - timedelta(days=margin_days)).strftime('%Y-%m-%d')
+
+stock_data = get_stockdata(ticker, adjusted_start_date, end_date)
 result = sma_cross(stock_data)
 result_trimmed = datatrimmer(result)
 
-data_backtested = backtest(result_trimmed)
+
+reslut_rightdate = result_trimmed[result_trimmed.index >= user_start_date].copy()
+
+data_backtested = backtest(reslut_rightdate)
 
 cagr, cagr_hodl = cagrcalc(data_backtested)
 annual_volatility, annual_volatility_hodl = calculate_volatility(data_backtested)
